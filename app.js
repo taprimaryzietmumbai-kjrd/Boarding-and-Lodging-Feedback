@@ -105,6 +105,37 @@ async function loadParticipants(){
     showParticipantStatus("Unable to load the public participant list: "+error.message+". Please check that the Google Sheet is shared as Anyone with the link – Viewer and that the first tab contains the heading row.", "error");
   }
 }
+function setupSignaturePad(){
+  const canvas=document.getElementById("signaturePad");
+  const ctx=canvas.getContext("2d");
+  const status=document.getElementById("signatureStatus");
+  let drawing=false,hasSignature=false,lastPoint=null;
+  ctx.lineWidth=3.2;ctx.lineCap="round";ctx.lineJoin="round";ctx.strokeStyle="#172b4d";
+  function point(event){
+    const rect=canvas.getBoundingClientRect();
+    return {x:(event.clientX-rect.left)*canvas.width/rect.width,y:(event.clientY-rect.top)*canvas.height/rect.height};
+  }
+  canvas.addEventListener("pointerdown",event=>{
+    event.preventDefault();drawing=true;lastPoint=point(event);canvas.setPointerCapture(event.pointerId);
+    ctx.beginPath();ctx.moveTo(lastPoint.x,lastPoint.y);ctx.lineTo(lastPoint.x+0.1,lastPoint.y+0.1);ctx.stroke();
+    hasSignature=true;status.textContent="Signature captured";
+  });
+  canvas.addEventListener("pointermove",event=>{
+    if(!drawing)return;event.preventDefault();const p=point(event);
+    ctx.beginPath();ctx.moveTo(lastPoint.x,lastPoint.y);ctx.lineTo(p.x,p.y);ctx.stroke();lastPoint=p;
+  });
+  function stop(){drawing=false;lastPoint=null;}
+  canvas.addEventListener("pointerup",stop);canvas.addEventListener("pointercancel",stop);canvas.addEventListener("lostpointercapture",stop);
+  document.getElementById("clearSignature").addEventListener("click",()=>{
+    ctx.clearRect(0,0,canvas.width,canvas.height);hasSignature=false;status.textContent="Signature required";
+  });
+  return {
+    hasSignature:()=>hasSignature,
+    dataUrl:()=>hasSignature?canvas.toDataURL("image/png"):""
+  };
+}
+const signaturePad=setupSignaturePad();
+
 function readForm(form){
   const fd=new FormData(form);
   const participant={
@@ -119,7 +150,7 @@ function readForm(form){
   };
   const ratings={};
   questions.forEach((q,i)=>{ratings[String(i+1)]=Number(fd.get("rating_"+(i+1))||0)});
-  return {participant,ratings,suggestions:String(fd.get("suggestions")||"").trim(),submittedAt:new Date().toISOString()};
+  return {participant,ratings,suggestions:String(fd.get("suggestions")||"").trim(),signatureDataUrl:signaturePad.dataUrl(),submittedAt:new Date().toISOString()};
 }
 function showStatus(message,type){
   const el=document.getElementById("status");el.textContent=message;el.className="status "+type;
@@ -128,6 +159,9 @@ async function submitFeedback(event){
   event.preventDefault();
   const form=event.currentTarget;
   if(!form.reportValidity())return;
+  if(!signaturePad.hasSignature()){
+    showStatus("Please draw your signature before submitting the feedback.","error");return;
+  }
   const payload=readForm(form);
   if(questions.some((q,i)=>!payload.ratings[String(i+1)])){
     showStatus("Please provide a rating for all 13 statements.","error");return;
