@@ -1,5 +1,5 @@
 /* ZIET Mumbai | Fooding & Lodging Feedback */
-const APPS_SCRIPT_URL = ""; // Add the deployed PDF-saving Apps Script URL here.
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyUWy-LV0gjeouo05DAV4uAxwlaNojgTa3Qqmb4FR8xPFixI0ndIfwz3FPws_emfYavUA/exec";
 const PARTICIPANT_SHEET_ID = "1Uuqoz2KFpTcw9d2HI02fLmFPopTaLnKWwZ9aR-uYCeY";
 const PARTICIPANT_CSV_URL = `https://docs.google.com/spreadsheets/d/${PARTICIPANT_SHEET_ID}/export?format=csv`;
 const DRIVE_FOLDER_REFERENCE = "https://drive.google.com/drive/folders/16W9tBw5FYz4s4C-plc0oYqyyBQR4Sfx3";
