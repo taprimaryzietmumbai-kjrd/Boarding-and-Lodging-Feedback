@@ -17,3 +17,12 @@
 #signaturePad{display:block;width:100%;height:160px;touch-action:none;cursor:crosshair}
 .signature-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:8px;font-size:12px;color:var(--muted)}
 button.secondary-button{background:#edf2f7;color:var(--navy);border:1px solid #d4dde8;padding:8px 14px;font-size:13px}
+
+.evidence-section{margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
+.evidence-section h2{color:var(--navy);font-size:18px;margin:0 0 5px}
+.privacy-note-left{font-size:13px;color:var(--muted);text-align:left;margin:4px 0 12px}
+.evidence-section video,.evidence-section img{display:block;width:100%;max-width:420px;max-height:315px;object-fit:cover;border:1px solid var(--line);border-radius:9px;background:#101828;margin:10px 0}
+.evidence-section img{object-fit:contain;background:#f8fafc}
+.evidence-actions{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.evidence-section small{display:block;color:var(--muted);font-size:12px;margin-top:6px}
+@media(max-width:640px){.evidence-actions button{flex:1 1 100%}}
