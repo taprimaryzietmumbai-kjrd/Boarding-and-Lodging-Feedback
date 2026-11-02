@@ -136,6 +136,56 @@ function setupSignaturePad(){
 }
 const signaturePad=setupSignaturePad();
 
+function setupPhotoAndLocation(){
+  const video=document.getElementById("photoVideo");
+  const canvas=document.getElementById("photoCanvas");
+  const preview=document.getElementById("photoPreview");
+  const start=document.getElementById("startCamera");
+  const capture=document.getElementById("capturePhoto");
+  const retake=document.getElementById("retakePhoto");
+  const photoStatus=document.getElementById("photoStatus");
+  const locationStatus=document.getElementById("locationStatus");
+  let stream=null,photoDataUrl="",geotag=null;
+
+  start.addEventListener("click",async()=>{
+    try{
+      if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw new Error("Live camera is not available in this browser. Please use a modern browser over HTTPS.");
+      stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"user"},audio:false});
+      video.srcObject=stream;video.hidden=false;preview.hidden=true;
+      capture.disabled=false;start.disabled=true;
+      photoStatus.textContent="Camera is active. Position your face and select Capture Photo.";
+    }catch(error){photoStatus.textContent="Camera unavailable: "+error.message;}
+  });
+  capture.addEventListener("click",()=>{
+    if(!video.videoWidth)return;
+    canvas.width=video.videoWidth;canvas.height=video.videoHeight;
+    const ctx=canvas.getContext("2d");
+    ctx.drawImage(video,0,0,canvas.width,canvas.height);
+    photoDataUrl=canvas.toDataURL("image/jpeg",0.78);
+    preview.src=photoDataUrl;preview.hidden=false;video.hidden=true;
+    if(stream){stream.getTracks().forEach(track=>track.stop());stream=null;}
+    capture.disabled=true;start.disabled=false;retake.hidden=false;
+    photoStatus.textContent="Photograph captured. It will be attached to your feedback.";
+  });
+  retake.addEventListener("click",()=>{
+    photoDataUrl="";preview.removeAttribute("src");preview.hidden=true;retake.hidden=true;
+    photoStatus.textContent="Photograph cleared. You may capture another.";
+  });
+  document.getElementById("getLocation").addEventListener("click",()=>{
+    if(!navigator.geolocation){locationStatus.textContent="Geolocation is not supported by this browser.";return;}
+    locationStatus.textContent="Waiting for location permission…";
+    navigator.geolocation.getCurrentPosition(position=>{
+      geotag={latitude:position.coords.latitude,longitude:position.coords.longitude,accuracy:position.coords.accuracy,capturedAt:new Date().toISOString()};
+      locationStatus.textContent="Geotag added (accuracy about "+Math.round(geotag.accuracy)+" metres).";
+    },error=>{
+      const messages={1:"Location permission was denied.",2:"Your location is unavailable.",3:"Location request timed out."};
+      locationStatus.textContent=messages[error.code]||"Could not retrieve location.";
+    },{enableHighAccuracy:true,timeout:15000,maximumAge:0});
+  });
+  return {photo:()=>photoDataUrl,geotag:()=>geotag};
+}
+const evidence=setupPhotoAndLocation();
+
 function readForm(form){
   const fd=new FormData(form);
   const participant={
@@ -150,7 +200,7 @@ function readForm(form){
   };
   const ratings={};
   questions.forEach((q,i)=>{ratings[String(i+1)]=Number(fd.get("rating_"+(i+1))||0)});
-  return {participant,ratings,suggestions:String(fd.get("suggestions")||"").trim(),signatureDataUrl:signaturePad.dataUrl(),submittedAt:new Date().toISOString()};
+  return {participant,ratings,suggestions:String(fd.get("suggestions")||"").trim(),signatureDataUrl:signaturePad.dataUrl(),photoDataUrl:evidence.photo(),geotag:evidence.geotag(),submittedAt:new Date().toISOString()};
 }
 function showStatus(message,type){
   const el=document.getElementById("status");el.textContent=message;el.className="status "+type;
