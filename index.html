@@ -38,6 +38,12 @@
       <label for="suggestions">14. What additional facilities, amenities or improvements would you suggest to make your stay more comfortable?</label>
       <textarea id="suggestions" name="suggestions" rows="4" maxlength="2000" placeholder="Share your suggestions (optional)"></textarea>
     </div>
+    <section class="signature-section" aria-labelledby="signatureHeading">
+      <h2 id="signatureHeading">Participant’s Signature <span class="req">*</span></h2>
+      <p>Please draw your signature in the box below using your finger, stylus or mouse.</p>
+      <div class="signature-pad-wrap"><canvas id="signaturePad" width="900" height="240" aria-label="Draw your signature here"></canvas></div>
+      <div class="signature-actions"><button type="button" id="clearSignature" class="secondary-button">Clear Signature</button><span id="signatureStatus" role="status">Signature required</span></div>
+    </section>
     <div id="status" class="status" role="status" aria-live="polite"></div>
     <div class="submit-row"><button id="submitBtn" type="submit">Submit Feedback</button></div>
     <p class="privacy-note">Please submit only once. Thank you for helping us improve participant facilities.</p>
