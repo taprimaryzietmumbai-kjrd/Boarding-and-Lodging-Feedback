@@ -112,7 +112,9 @@ function readForm(form){
     school:String(fd.get("school")||"").trim(),
     designation:String(fd.get("designation")||"").trim(),
     region:String(fd.get("region")||"").trim(),
+    hostelBlock:String(fd.get("hostelBlock")||"").trim(),
     roomNumber:String(fd.get("roomNumber")||"").trim(),
+    room:String([fd.get("hostelBlock"),fd.get("roomNumber")].filter(Boolean).join("-")),
     email:String(fd.get("email")||"").trim()
   };
   const ratings={};
