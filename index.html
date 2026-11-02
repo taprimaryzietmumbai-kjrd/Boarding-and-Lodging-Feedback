@@ -38,6 +38,25 @@
       <label for="suggestions">14. What additional facilities, amenities or improvements would you suggest to make your stay more comfortable?</label>
       <textarea id="suggestions" name="suggestions" rows="4" maxlength="2000" placeholder="Share your suggestions (optional)"></textarea>
     </div>
+    <section class="evidence-section" aria-labelledby="photoHeading">
+      <h2 id="photoHeading">Live Participant Photograph</h2>
+      <p class="privacy-note-left">Optional. With your permission, use the camera to take a current photograph. The image will be sent with your feedback and included in its PDF record.</p>
+      <video id="photoVideo" autoplay playsinline muted hidden></video>
+      <canvas id="photoCanvas" width="720" height="540" hidden></canvas>
+      <img id="photoPreview" alt="Captured participant photograph" hidden>
+      <div class="evidence-actions">
+        <button type="button" id="startCamera" class="secondary-button">Open Camera</button>
+        <button type="button" id="capturePhoto" class="secondary-button" disabled>Capture Photo</button>
+        <button type="button" id="retakePhoto" class="secondary-button" hidden>Retake Photo</button>
+      </div>
+      <small id="photoStatus" role="status">No photograph captured.</small>
+    </section>
+    <section class="evidence-section" aria-labelledby="locationHeading">
+      <h2 id="locationHeading">Location Geotag</h2>
+      <p class="privacy-note-left">Optional. Your browser will ask permission to share the device location. Coordinates and accuracy will be attached to this feedback submission.</p>
+      <button type="button" id="getLocation" class="secondary-button">Allow Location &amp; Add Geotag</button>
+      <small id="locationStatus" role="status">Location not added.</small>
+    </section>
     <section class="signature-section" aria-labelledby="signatureHeading">
       <h2 id="signatureHeading">Participant’s Signature <span class="req">*</span></h2>
       <p>Please draw your signature in the box below using your finger, stylus or mouse.</p>
