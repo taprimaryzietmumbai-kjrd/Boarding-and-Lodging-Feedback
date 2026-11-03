@@ -45,12 +45,31 @@
     <div class="section-banner food-banner">
       <span class="banner-emoji">🍽️</span><div><span class="welcome-kicker">YOUR MEALS · YOUR FEEDBACK</span><h2>Feedback for Fooding</h2><p>Help us serve better, every day.</p></div>
     </div>
-    <div class="panel food-coming">
-      <h2>Fooding Feedback</h2>
-      <p>This is your dedicated space to share feedback on the meals and dining arrangements during the workshop.</p>
-      <div class="food-topics"><span>🥗 Food Quality</span><span>🍛 Taste &amp; Variety</span><span>🧼 Hygiene</span><span>⏰ Timeliness</span><span>🤝 Service</span></div>
-      <p class="setup-note"><strong>Feedback form activation:</strong> The Fooding section’s questionnaire and PDF submission need a separate Fooding record format in the Apps Script backend. Your existing Lodging feedback and PDF process remain unchanged.</p>
-    </div>
+    <section class="panel intro food-intro">
+      <h2>Your dining experience matters</h2>
+      <p>Please rate the food and dining arrangements provided during the workshop. Your feedback will help improve meal quality, variety, hygiene and service.</p>
+      <div class="scale-key"><span><b>1</b> Poor</span><span><b>2</b> Fair</span><span><b>3</b> Good</span><span><b>4</b> Very Good</span><span><b>5</b> Excellent</span></div>
+    </section>
+    <form id="foodingForm" class="panel" novalidate>
+      <h2>Participant Information</h2>
+      <div class="field-grid">
+        <label class="full">Select Your Name <span class="req">*</span><select name="participantSelect" id="foodParticipantSelect" required><option value="">Loading participant list…</option></select><small id="foodParticipantStatus" class="helper-text" role="status">Details will be filled automatically from the official participant list.</small></label>
+        <label>Participant’s Name <span class="req">*</span><input name="participantName" id="foodParticipantName" required readonly placeholder="Select your name above"></label>
+        <label>School / Vidyalaya <span class="req">*</span><input name="school" id="foodSchool" required readonly placeholder="Auto-filled"></label>
+        <label>Designation <input name="designation" id="foodDesignation" readonly placeholder="Auto-filled"></label>
+        <label>Region <input name="region" id="foodRegion" readonly placeholder="Auto-filled"></label>
+        <label class="full">Email Address <input name="email" id="foodEmail" type="email" readonly placeholder="Auto-filled"></label>
+      </div>
+      <div class="section-heading food-heading"><h2>Fooding – Meal &amp; Dining Feedback</h2><p>Rate each aspect on a scale of 1 to 5.</p></div>
+      <div id="foodRatingQuestions"></div>
+      <div class="field suggestions">
+        <label for="foodSuggestions">9. Suggestions for improving meals, menu, dining arrangements or service (optional)</label>
+        <textarea id="foodSuggestions" name="suggestions" rows="4" maxlength="2000" placeholder="Share your suggestions…"></textarea>
+      </div>
+      <div id="foodStatus" class="status" role="status" aria-live="polite"></div>
+      <div class="submit-row"><button id="foodSubmitBtn" type="submit">Submit Fooding Feedback</button></div>
+      <p class="privacy-note">Your Fooding feedback will be recorded separately from Lodging feedback.</p>
+    </form>
   </section>
   <section id="lodgingView" class="dashboard-view" hidden>
     <div class="section-banner lodging-banner">
