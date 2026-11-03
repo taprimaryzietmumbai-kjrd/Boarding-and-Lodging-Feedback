@@ -289,6 +289,77 @@ function renderFoodQuestions(){
 function showFoodStatus(message,type){
  const el=document.getElementById("foodStatus");el.textContent=message;el.className="status "+type;
 }
+function setupFoodSignaturePad(){
+ const canvas=document.getElementById("foodSignaturePad");
+ const ctx=canvas.getContext("2d");
+ const status=document.getElementById("foodSignatureStatus");
+ let drawing=false,hasSignature=false,lastPoint=null;
+ ctx.lineWidth=3.2;ctx.lineCap="round";ctx.lineJoin="round";ctx.strokeStyle="#172b4d";
+ function point(event){
+  const rect=canvas.getBoundingClientRect();
+  return {x:(event.clientX-rect.left)*canvas.width/rect.width,y:(event.clientY-rect.top)*canvas.height/rect.height};
+ }
+ canvas.addEventListener("pointerdown",event=>{
+  event.preventDefault();drawing=true;lastPoint=point(event);canvas.setPointerCapture(event.pointerId);
+  ctx.beginPath();ctx.moveTo(lastPoint.x,lastPoint.y);ctx.lineTo(lastPoint.x+0.1,lastPoint.y+0.1);ctx.stroke();
+  hasSignature=true;status.textContent="Signature captured";
+ });
+ canvas.addEventListener("pointermove",event=>{
+  if(!drawing)return;event.preventDefault();const p=point(event);
+  ctx.beginPath();ctx.moveTo(lastPoint.x,lastPoint.y);ctx.lineTo(p.x,p.y);ctx.stroke();lastPoint=p;
+ });
+ function stop(){drawing=false;lastPoint=null;}
+ canvas.addEventListener("pointerup",stop);canvas.addEventListener("pointercancel",stop);canvas.addEventListener("lostpointercapture",stop);
+ function clear(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);hasSignature=false;status.textContent="Signature required";
+ }
+ document.getElementById("foodClearSignature").addEventListener("click",clear);
+ return {hasSignature:()=>hasSignature,dataUrl:()=>hasSignature?canvas.toDataURL("image/png"):"",clear};
+}
+const foodSignaturePad=setupFoodSignaturePad();
+
+function setupFoodSelfie(){
+ const video=document.getElementById("foodPhotoVideo");
+ const canvas=document.getElementById("foodPhotoCanvas");
+ const preview=document.getElementById("foodPhotoPreview");
+ const start=document.getElementById("foodStartCamera");
+ const capture=document.getElementById("foodCapturePhoto");
+ const retake=document.getElementById("foodRetakePhoto");
+ const status=document.getElementById("foodPhotoStatus");
+ let stream=null,photoDataUrl="";
+ start.addEventListener("click",async()=>{
+  try{
+   if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw new Error("Camera access is unavailable. Please use a modern browser over HTTPS.");
+   stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"user"},audio:false});
+   video.srcObject=stream;video.hidden=false;preview.hidden=true;capture.disabled=false;start.disabled=true;
+   status.textContent="Camera is active. Position yourself and select Capture Selfie.";
+  }catch(error){status.textContent="Camera unavailable: "+error.message;}
+ });
+ capture.addEventListener("click",()=>{
+  if(!video.videoWidth)return;
+  canvas.width=video.videoWidth;canvas.height=video.videoHeight;
+  canvas.getContext("2d").drawImage(video,0,0,canvas.width,canvas.height);
+  photoDataUrl=canvas.toDataURL("image/jpeg",0.72);
+  preview.src=photoDataUrl;preview.hidden=false;video.hidden=true;
+  if(stream){stream.getTracks().forEach(track=>track.stop());stream=null;}
+  capture.disabled=true;start.disabled=false;retake.hidden=false;
+  status.textContent="Selfie captured. It will be attached to your Fooding feedback.";
+ });
+ retake.addEventListener("click",()=>{
+  photoDataUrl="";preview.removeAttribute("src");preview.hidden=true;retake.hidden=true;
+  status.textContent="Selfie cleared. You may capture another.";
+ });
+ return {
+  dataUrl:()=>photoDataUrl,
+  clear:()=>{
+   photoDataUrl="";preview.removeAttribute("src");preview.hidden=true;video.hidden=true;retake.hidden=true;capture.disabled=true;start.disabled=false;
+   if(stream){stream.getTracks().forEach(track=>track.stop());stream=null;}
+   status.textContent="No selfie captured.";
+  }
+ };
+}
+const foodSelfie=setupFoodSelfie();
+
 async function submitFoodingFeedback(event){
  event.preventDefault();
  const form=event.currentTarget;if(!form.reportValidity())return;
@@ -296,15 +367,16 @@ async function submitFoodingFeedback(event){
  const participant={name:String(fd.get("participantName")||"").trim(),school:String(fd.get("school")||"").trim(),designation:String(fd.get("designation")||"").trim(),region:String(fd.get("region")||"").trim(),email:String(fd.get("email")||"").trim()};
  const ratings={};foodQuestions.forEach((q,i)=>ratings[String(i+1)]=Number(fd.get("food_rating_"+(i+1))||0));
  if(foodQuestions.some((q,i)=>!ratings[String(i+1)])){showFoodStatus("Please provide all seven Fooding ratings.","error");return;}
+ if(!foodSignaturePad.hasSignature()){showFoodStatus("Please draw your signature before submitting the Fooding feedback.","error");return;}
  if(!APPS_SCRIPT_URL){showFoodStatus("PDF storage is not configured.","warning");return;}
  const btn=document.getElementById("foodSubmitBtn");btn.disabled=true;btn.textContent="Submitting…";
- const payload={feedbackType:"fooding",participant,mealType:String(fd.get("mealType")||"").trim(),foodEatenToday:String(fd.get("foodEatenToday")||"").trim(),ratings,foodLikedMost:String(fd.get("foodLikedMost")||"").trim(),suggestions:String(fd.get("suggestions")||"").trim(),submittedAt:new Date().toISOString()};
+ const payload={feedbackType:"fooding",participant,mealType:String(fd.get("mealType")||"").trim(),foodEatenToday:String(fd.get("foodEatenToday")||"").trim(),ratings,foodLikedMost:String(fd.get("foodLikedMost")||"").trim(),suggestions:String(fd.get("suggestions")||"").trim(),signatureDataUrl:foodSignaturePad.dataUrl(),photoDataUrl:foodSelfie.dataUrl(),submittedAt:new Date().toISOString()};
  try{
   const response=await fetch(APPS_SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload),redirect:"follow"});
   const result=await response.json();if(!response.ok||!result.success)throw new Error(result.message||"Fooding submission could not be completed.");
   showFoodStatus(result.message||"Fooding feedback submitted. Your PDF record is ready.","success");
   if(result.pdfUrl){const a=document.createElement("a");a.href=result.pdfUrl;a.target="_blank";a.rel="noopener";a.className="download-link";a.textContent="Open / Download Fooding Feedback PDF";document.getElementById("foodStatus").append(document.createElement("br"),a);}
-  form.reset();fillFoodParticipantDetails();btn.textContent="Submitted";
+  form.reset();fillFoodParticipantDetails();foodSignaturePad.clear();foodSelfie.clear();btn.textContent="Submitted";
  }catch(error){showFoodStatus("Submission failed: "+error.message,"error");btn.disabled=false;btn.textContent="Submit Fooding Feedback";}
 }
 renderFoodQuestions();
