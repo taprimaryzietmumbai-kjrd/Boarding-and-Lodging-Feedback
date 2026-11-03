@@ -235,3 +235,23 @@ renderQuestions();
 document.getElementById("participantSelect").addEventListener("change",fillParticipantDetails);
 document.getElementById("feedbackForm").addEventListener("submit",submitFeedback);
 loadParticipants();
+
+
+// Dashboard navigation: switch between the landing dashboard and feedback sections.
+function showDashboardView(view){
+  const ids={dashboard:"dashboardView",fooding:"foodingView",lodging:"lodgingView"};
+  Object.entries(ids).forEach(([key,id])=>{
+    const section=document.getElementById(id);
+    if(section)section.hidden=key!==view;
+  });
+  document.querySelectorAll(".dashboard-tab").forEach(tab=>{
+    const active=tab.dataset.view===view;
+    tab.classList.toggle("active",active);
+    tab.setAttribute("aria-current",active?"page":"false");
+  });
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+document.querySelectorAll("[data-view]").forEach(control=>{
+  control.addEventListener("click",()=>showDashboardView(control.dataset.view));
+});
+showDashboardView("dashboard");
