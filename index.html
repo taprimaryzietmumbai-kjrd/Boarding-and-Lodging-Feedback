@@ -84,6 +84,28 @@
         <label for="foodSuggestions">10. Do you have any suggestions to improve the food prepared or served? (optional)</label>
         <textarea id="foodSuggestions" name="suggestions" rows="3" maxlength="2000" placeholder="Share your suggestions…"></textarea>
       </div>
+      <section class="evidence-section" aria-labelledby="foodPhotoHeading">
+        <h2 id="foodPhotoHeading">Live Participant Selfie</h2>
+        <p class="privacy-note-left">Optional. With your permission, open the camera and capture a current selfie to attach to your Fooding feedback.</p>
+        <video id="foodPhotoVideo" autoplay playsinline muted hidden></video>
+        <canvas id="foodPhotoCanvas" width="720" height="540" hidden></canvas>
+        <img id="foodPhotoPreview" alt="Captured Fooding participant selfie" hidden>
+        <div class="evidence-actions">
+          <button type="button" id="foodStartCamera" class="secondary-button">Open Camera</button>
+          <button type="button" id="foodCapturePhoto" class="secondary-button" disabled>Capture Selfie</button>
+          <button type="button" id="foodRetakePhoto" class="secondary-button" hidden>Retake Selfie</button>
+        </div>
+        <small id="foodPhotoStatus" role="status">No selfie captured.</small>
+      </section>
+      <section class="signature-section" aria-labelledby="foodSignatureHeading">
+        <h2 id="foodSignatureHeading">Participant’s Signature <span class="req">*</span></h2>
+        <p>Please draw your signature below using your finger, stylus or mouse.</p>
+        <div class="signature-pad-wrap"><canvas id="foodSignaturePad" width="900" height="240" aria-label="Draw your Fooding feedback signature here"></canvas></div>
+        <div class="signature-actions">
+          <button type="button" id="foodClearSignature" class="secondary-button">Clear Signature</button>
+          <span id="foodSignatureStatus" role="status">Signature required</span>
+        </div>
+      </section>
       <div id="foodStatus" class="status" role="status" aria-live="polite"></div>
       <div class="submit-row"><button id="foodSubmitBtn" type="submit">Submit Fooding Feedback</button></div>
       <p class="privacy-note">Your Fooding feedback will be recorded separately from Lodging feedback.</p>
