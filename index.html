@@ -60,6 +60,16 @@
         <label>Region <input name="region" id="foodRegion" readonly placeholder="Auto-filled"></label>
         <label class="full">Email Address <input name="email" id="foodEmail" type="email" readonly placeholder="Auto-filled"></label>
       </div>
+      <div class="field meal-selector">
+        <label for="foodMealType">Select Meal <span class="req">*</span></label>
+        <select id="foodMealType" name="mealType" required>
+          <option value="">-- Select meal --</option>
+          <option value="Breakfast">Breakfast</option>
+          <option value="Lunch">Lunch</option>
+          <option value="Evening snack">Evening snack</option>
+          <option value="Dinner">Dinner</option>
+        </select>
+      </div>
       <div class="section-heading food-heading"><h2>Fooding – Meal &amp; Dining Feedback</h2><p>Please answer the three short questions and rate each aspect using the appropriate 5-point scale.</p></div>
       <div class="field suggestions">
         <label for="foodEatenToday">1. What did you eat today? <span class="req">*</span></label>
