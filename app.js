@@ -204,7 +204,7 @@ function readForm(form){
   };
   const ratings={};
   questions.forEach((q,i)=>{ratings[String(i+1)]=Number(fd.get("rating_"+(i+1))||0)});
-  return {participant,ratings,suggestions:String(fd.get("suggestions")||"").trim(),signatureDataUrl:signaturePad.dataUrl(),photoDataUrl:evidence.photo(),geotag:evidence.geotag(),submittedAt:new Date().toISOString()};
+  return {feedbackType:"lodging",participant,ratings,suggestions:String(fd.get("suggestions")||"").trim(),signatureDataUrl:signaturePad.dataUrl(),photoDataUrl:evidence.photo(),geotag:evidence.geotag(),submittedAt:new Date().toISOString()};
 }
 function showStatus(message,type){
   const el=document.getElementById("status");el.textContent=message;el.className="status "+type;
