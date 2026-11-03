@@ -268,3 +268,45 @@ function fillFoodParticipantDetails(){
  if(p)document.getElementById("foodParticipantStatus").textContent="Participant details loaded automatically.";
 }
 document.getElementById("foodParticipantSelect").addEventListener("change",fillFoodParticipantDetails);
+
+const foodQuestions = [
+"Overall quality of the food served",
+"Taste and flavour of the meals",
+"Variety of dishes offered",
+"Freshness and serving temperature of the food",
+"Hygiene and cleanliness of the dining area",
+"Cleanliness of crockery and cutlery",
+"Serving arrangements and portion sizes",
+"Punctuality and overall dining service"
+];
+function renderFoodQuestions(){
+ const root=document.getElementById("foodRatingQuestions");
+ if(!root)return;
+ root.innerHTML=foodQuestions.map((q,i)=>{
+  const opts=scale.map(v=>'<label class="rating-option"><input type="radio" name="food_rating_'+(i+1)+'" value="'+v.v+'" required><span class="rating-circle">'+v.v+'</span><span class="rating-label">'+v.t+'</span></label>').join("");
+  return '<fieldset class="rating-question"><legend><span class="number">'+(i+1)+'</span>How would you rate the '+q.toLowerCase()+'? <span class="req">*</span></legend><div class="rating-options">'+opts+'</div></fieldset>';
+ }).join("");
+}
+function showFoodStatus(message,type){
+ const el=document.getElementById("foodStatus");el.textContent=message;el.className="status "+type;
+}
+async function submitFoodingFeedback(event){
+ event.preventDefault();
+ const form=event.currentTarget;if(!form.reportValidity())return;
+ const fd=new FormData(form);
+ const participant={name:String(fd.get("participantName")||"").trim(),school:String(fd.get("school")||"").trim(),designation:String(fd.get("designation")||"").trim(),region:String(fd.get("region")||"").trim(),email:String(fd.get("email")||"").trim()};
+ const ratings={};foodQuestions.forEach((q,i)=>ratings[String(i+1)]=Number(fd.get("food_rating_"+(i+1))||0));
+ if(foodQuestions.some((q,i)=>!ratings[String(i+1)])){showFoodStatus("Please rate all eight Fooding statements.","error");return;}
+ if(!APPS_SCRIPT_URL){showFoodStatus("PDF storage is not configured.","warning");return;}
+ const btn=document.getElementById("foodSubmitBtn");btn.disabled=true;btn.textContent="Submitting…";
+ const payload={feedbackType:"fooding",participant,ratings,suggestions:String(fd.get("suggestions")||"").trim(),submittedAt:new Date().toISOString()};
+ try{
+  const response=await fetch(APPS_SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload),redirect:"follow"});
+  const result=await response.json();if(!response.ok||!result.success)throw new Error(result.message||"Fooding submission could not be completed.");
+  showFoodStatus(result.message||"Fooding feedback submitted. Your PDF record is ready.","success");
+  if(result.pdfUrl){const a=document.createElement("a");a.href=result.pdfUrl;a.target="_blank";a.rel="noopener";a.className="download-link";a.textContent="Open / Download Fooding Feedback PDF";document.getElementById("foodStatus").append(document.createElement("br"),a);}
+  form.reset();fillFoodParticipantDetails();btn.textContent="Submitted";
+ }catch(error){showFoodStatus("Submission failed: "+error.message,"error");btn.disabled=false;btn.textContent="Submit Fooding Feedback";}
+}
+renderFoodQuestions();
+document.getElementById("foodingForm").addEventListener("submit",submitFoodingFeedback);
