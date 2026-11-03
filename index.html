@@ -15,6 +15,47 @@
   <p>ZIET Mumbai · Participant Experience Survey</p>
 </header>
 <main class="container">
+  <nav class="dashboard-tabs" aria-label="Feedback dashboard navigation">
+    <button type="button" class="dashboard-tab active" data-view="dashboard">✦ Dashboard</button>
+    <button type="button" class="dashboard-tab food-tab" data-view="fooding">🍽️ Feedback for Fooding</button>
+    <button type="button" class="dashboard-tab lodging-tab" data-view="lodging">🛏️ Feedback for Lodging</button>
+  </nav>
+  <section id="dashboardView" class="dashboard-view">
+    <div class="dashboard-welcome">
+      <span class="welcome-kicker">YOUR VOICE · OUR IMPROVEMENT</span>
+      <h2>Participant Experience Dashboard</h2>
+      <p>Help us make every workshop stay more comfortable, nourishing and memorable.</p>
+    </div>
+    <div class="dashboard-cards">
+      <button type="button" class="dashboard-card food-card" data-view="fooding">
+        <span class="card-icon">🍽️</span><span class="card-label">FOODING FEEDBACK</span>
+        <strong>Share Your Dining Experience</strong>
+        <span class="card-description">Meals · Quality · Hygiene · Service</span>
+        <span class="card-action">Open Fooding Section →</span>
+      </button>
+      <button type="button" class="dashboard-card lodging-card" data-view="lodging">
+        <span class="card-icon">🛏️</span><span class="card-label">LODGING FEEDBACK</span>
+        <strong>Share Your Stay Experience</strong>
+        <span class="card-description">Room · Cleanliness · Comfort · Facilities</span>
+        <span class="card-action">Open Lodging Section →</span>
+      </button>
+    </div>
+  </section>
+  <section id="foodingView" class="dashboard-view" hidden>
+    <div class="section-banner food-banner">
+      <span class="banner-emoji">🍽️</span><div><span class="welcome-kicker">YOUR MEALS · YOUR FEEDBACK</span><h2>Feedback for Fooding</h2><p>Help us serve better, every day.</p></div>
+    </div>
+    <div class="panel food-coming">
+      <h2>Fooding Feedback</h2>
+      <p>This is your dedicated space to share feedback on the meals and dining arrangements during the workshop.</p>
+      <div class="food-topics"><span>🥗 Food Quality</span><span>🍛 Taste &amp; Variety</span><span>🧼 Hygiene</span><span>⏰ Timeliness</span><span>🤝 Service</span></div>
+      <p class="setup-note"><strong>Feedback form activation:</strong> The Fooding section’s questionnaire and PDF submission need a separate Fooding record format in the Apps Script backend. Your existing Lodging feedback and PDF process remain unchanged.</p>
+    </div>
+  </section>
+  <section id="lodgingView" class="dashboard-view" hidden>
+    <div class="section-banner lodging-banner">
+      <span class="banner-emoji">🛏️</span><div><span class="welcome-kicker">YOUR STAY · YOUR FEEDBACK</span><h2>Feedback for Lodging</h2><p>Comfort, cleanliness and care matter.</p></div>
+    </div>
   <section class="panel intro">
     <h2>Your feedback matters</h2>
     <p>Please rate the facilities provided during your stay. Select one rating for each statement. Your responses will help us improve the comfort, cleanliness and overall experience of future participants.</p>
@@ -67,6 +108,7 @@
     <div class="submit-row"><button id="submitBtn" type="submit">Submit Feedback</button></div>
     <p class="privacy-note">Please submit only once. Thank you for helping us improve participant facilities.</p>
   </form>
+  </section>
   <footer>ZIET Mumbai · Teacher Professional Development</footer>
 </main>
 <script src="app.js"></script>
