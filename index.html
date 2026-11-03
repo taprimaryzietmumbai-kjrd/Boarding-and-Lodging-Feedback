@@ -60,11 +60,19 @@
         <label>Region <input name="region" id="foodRegion" readonly placeholder="Auto-filled"></label>
         <label class="full">Email Address <input name="email" id="foodEmail" type="email" readonly placeholder="Auto-filled"></label>
       </div>
-      <div class="section-heading food-heading"><h2>Fooding – Meal &amp; Dining Feedback</h2><p>Rate each aspect on a scale of 1 to 5.</p></div>
+      <div class="section-heading food-heading"><h2>Fooding – Meal &amp; Dining Feedback</h2><p>Please answer the three short questions and rate each aspect using the appropriate 5-point scale.</p></div>
+      <div class="field suggestions">
+        <label for="foodEatenToday">1. What did you eat today? <span class="req">*</span></label>
+        <textarea id="foodEatenToday" name="foodEatenToday" rows="2" maxlength="1000" required placeholder="Mention the meals and food items served today…"></textarea>
+      </div>
       <div id="foodRatingQuestions"></div>
       <div class="field suggestions">
-        <label for="foodSuggestions">9. Suggestions for improving meals, menu, dining arrangements or service (optional)</label>
-        <textarea id="foodSuggestions" name="suggestions" rows="4" maxlength="2000" placeholder="Share your suggestions…"></textarea>
+        <label for="foodLikedMost">9. What did you like the most about the food items served today? (optional)</label>
+        <textarea id="foodLikedMost" name="foodLikedMost" rows="2" maxlength="1000" placeholder="Tell us which dish or food item you liked most…"></textarea>
+      </div>
+      <div class="field suggestions">
+        <label for="foodSuggestions">10. Do you have any suggestions to improve the food prepared or served? (optional)</label>
+        <textarea id="foodSuggestions" name="suggestions" rows="3" maxlength="2000" placeholder="Share your suggestions…"></textarea>
       </div>
       <div id="foodStatus" class="status" role="status" aria-live="polite"></div>
       <div class="submit-row"><button id="foodSubmitBtn" type="submit">Submit Fooding Feedback</button></div>
