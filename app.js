@@ -370,7 +370,7 @@ async function submitFoodingFeedback(event){
  if(!foodSignaturePad.hasSignature()){showFoodStatus("Please draw your signature before submitting the Fooding feedback.","error");return;}
  if(!APPS_SCRIPT_URL){showFoodStatus("PDF storage is not configured.","warning");return;}
  const btn=document.getElementById("foodSubmitBtn");btn.disabled=true;btn.textContent="Submitting…";
- const payload={feedbackType:"fooding",participant,mealType:String(fd.get("mealType")||"").trim(),foodEatenToday:String(fd.get("foodEatenToday")||"").trim(),ratings,foodLikedMost:String(fd.get("foodLikedMost")||"").trim(),suggestions:String(fd.get("suggestions")||"").trim(),signatureDataUrl:foodSignaturePad.dataUrl(),photoDataUrl:foodSelfie.dataUrl(),submittedAt:new Date().toISOString()};
+ const payload={feedbackType:"fooding",participant,mealType:String(fd.get("mealType")||"").trim(),foodEatenToday:String(fd.get("foodEatenToday")||"").trim(),ratings,foodLikedMost:String(fd.get("foodLikedMost")||"").trim(),suggestions:String(fd.get("suggestions")||"").trim(),morningTeaSuggestions:String(fd.get("morningTeaSuggestions")||"").trim(),signatureDataUrl:foodSignaturePad.dataUrl(),photoDataUrl:foodSelfie.dataUrl(),submittedAt:new Date().toISOString()};
  try{
   const response=await fetch(APPS_SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload),redirect:"follow"});
   const result=await response.json();if(!response.ok||!result.success)throw new Error(result.message||"Fooding submission could not be completed.");
