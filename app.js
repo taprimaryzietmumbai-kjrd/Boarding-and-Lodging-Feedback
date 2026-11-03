@@ -93,12 +93,16 @@ async function loadParticipants(){
     })).filter(p=>p.name);
     if(!participants.length)throw new Error("The participant list contains no names.");
     select.innerHTML='<option value="">-- Select your name --</option>';
+    const foodSelect=document.getElementById("foodParticipantSelect");
+    if(foodSelect)foodSelect.innerHTML='<option value="">-- Select your name --</option>';
     participants.forEach((p,i)=>{
       const option=document.createElement("option");option.value=String(i);
       option.textContent=p.name+(p.school?" — "+p.school:"");
       select.appendChild(option);
+      if(foodSelect)foodSelect.appendChild(option.cloneNode(true));
     });
     showParticipantStatus(participants.length+" participants loaded. Select your name to auto-fill your details.");
+    const foodStatus=document.getElementById("foodParticipantStatus");if(foodStatus)foodStatus.textContent=participants.length+" participants loaded. Select your name to auto-fill your details.";
   }catch(error){
     select.innerHTML='<option value="">Participant list could not be loaded</option>';
     select.disabled=true;
@@ -255,3 +259,12 @@ document.querySelectorAll("[data-view]").forEach(control=>{
   control.addEventListener("click",()=>showDashboardView(control.dataset.view));
 });
 showDashboardView("dashboard");
+
+
+function fillFoodParticipantDetails(){
+ const p=participants[Number(document.getElementById("foodParticipantSelect").value)];
+ const values={foodParticipantName:p?p.name:"",foodSchool:p?p.school:"",foodDesignation:p?p.designation:"",foodRegion:p?p.region:"",foodEmail:p?p.email:""};
+ Object.entries(values).forEach(([id,value])=>{const el=document.getElementById(id);if(el)el.value=value;});
+ if(p)document.getElementById("foodParticipantStatus").textContent="Participant details loaded automatically.";
+}
+document.getElementById("foodParticipantSelect").addEventListener("change",fillFoodParticipantDetails);
