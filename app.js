@@ -270,21 +270,20 @@ function fillFoodParticipantDetails(){
 document.getElementById("foodParticipantSelect").addEventListener("change",fillFoodParticipantDetails);
 
 const foodQuestions = [
-"Overall quality of the food served",
-"Taste and flavour of the meals",
-"Variety of dishes offered",
-"Freshness and serving temperature of the food",
-"Hygiene and cleanliness of the dining area",
-"Cleanliness of crockery and cutlery",
-"Serving arrangements and portion sizes",
-"Punctuality and overall dining service"
+ {question:"How would you rate the taste of the food?",labels:["Very Poor","Poor","Good","Very Good","Excellent"]},
+ {question:"How oily was the food?",labels:["Not oily at all","Slightly oily","Moderately oily","Very oily","Excessively oily"]},
+ {question:"How would you rate the sugar content of the food?",labels:["Much too low","Slightly low","Just right","Slightly high","Much too high"]},
+ {question:"How would you rate the salt content of the food?",labels:["Much too low","Slightly low","Just right","Slightly high","Much too high"]},
+ {question:"How would you rate the chilli (mirchi) level of the food?",labels:["Much too mild","Slightly mild","Just right","Slightly hot","Much too hot"]},
+ {question:"How would you rate the hygiene and cleanliness of the canteen/dining area?",labels:["Very Poor","Poor","Good","Very Good","Excellent"]},
+ {question:"How would you rate the hygiene followed while serving food in the canteen?",labels:["Very Poor","Poor","Good","Very Good","Excellent"]}
 ];
 function renderFoodQuestions(){
  const root=document.getElementById("foodRatingQuestions");
  if(!root)return;
  root.innerHTML=foodQuestions.map((q,i)=>{
-  const opts=scale.map(v=>'<label class="rating-option"><input type="radio" name="food_rating_'+(i+1)+'" value="'+v.v+'" required><span class="rating-circle">'+v.v+'</span><span class="rating-label">'+v.t+'</span></label>').join("");
-  return '<fieldset class="rating-question"><legend><span class="number">'+(i+1)+'</span>How would you rate the '+q.toLowerCase()+'? <span class="req">*</span></legend><div class="rating-options">'+opts+'</div></fieldset>';
+  const opts=q.labels.map((label,index)=>'<label class="rating-option"><input type="radio" name="food_rating_'+(i+1)+'" value="'+(index+1)+'" required><span class="rating-circle">'+(index+1)+'</span><span class="rating-label">'+label+'</span></label>').join("");
+  return '<fieldset class="rating-question"><legend><span class="number">'+(i+2)+'</span>'+q.question+' <span class="req">*</span></legend><div class="rating-options">'+opts+'</div></fieldset>';
  }).join("");
 }
 function showFoodStatus(message,type){
@@ -296,10 +295,10 @@ async function submitFoodingFeedback(event){
  const fd=new FormData(form);
  const participant={name:String(fd.get("participantName")||"").trim(),school:String(fd.get("school")||"").trim(),designation:String(fd.get("designation")||"").trim(),region:String(fd.get("region")||"").trim(),email:String(fd.get("email")||"").trim()};
  const ratings={};foodQuestions.forEach((q,i)=>ratings[String(i+1)]=Number(fd.get("food_rating_"+(i+1))||0));
- if(foodQuestions.some((q,i)=>!ratings[String(i+1)])){showFoodStatus("Please rate all eight Fooding statements.","error");return;}
+ if(foodQuestions.some((q,i)=>!ratings[String(i+1)])){showFoodStatus("Please provide all seven Fooding ratings.","error");return;}
  if(!APPS_SCRIPT_URL){showFoodStatus("PDF storage is not configured.","warning");return;}
  const btn=document.getElementById("foodSubmitBtn");btn.disabled=true;btn.textContent="Submitting…";
- const payload={feedbackType:"fooding",participant,ratings,suggestions:String(fd.get("suggestions")||"").trim(),submittedAt:new Date().toISOString()};
+ const payload={feedbackType:"fooding",participant,foodEatenToday:String(fd.get("foodEatenToday")||"").trim(),ratings,foodLikedMost:String(fd.get("foodLikedMost")||"").trim(),suggestions:String(fd.get("suggestions")||"").trim(),submittedAt:new Date().toISOString()};
  try{
   const response=await fetch(APPS_SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload),redirect:"follow"});
   const result=await response.json();if(!response.ok||!result.success)throw new Error(result.message||"Fooding submission could not be completed.");
