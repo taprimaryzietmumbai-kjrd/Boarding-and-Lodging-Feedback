@@ -26,3 +26,37 @@ button.secondary-button{background:#edf2f7;color:var(--navy);border:1px solid #d
 .evidence-actions{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
 .evidence-section small{display:block;color:var(--muted);font-size:12px;margin-top:6px}
 @media(max-width:640px){.evidence-actions button{flex:1 1 100%}}
+
+
+/* Colourful participant feedback dashboard */
+[hidden]{display:none!important}
+.dashboard-tabs{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 18px;padding:9px;background:#fff;border:1px solid #e7eaf0;border-radius:16px;box-shadow:0 8px 24px #172b4d12}
+.dashboard-tab{flex:1 1 170px;min-height:48px;border-radius:11px;padding:11px 15px;background:#f0f3f8;color:#344054;font-weight:800;letter-spacing:.1px;transition:transform .18s,box-shadow .18s,filter .18s}
+.dashboard-tab:hover,.dashboard-card:hover{transform:translateY(-2px);filter:saturate(1.12)}
+.dashboard-tab.active{background:linear-gradient(120deg,#4527a0,#7b2cbf 55%,#c026d3);color:#fff;box-shadow:0 7px 18px #7b2cbf40}
+.dashboard-tab.food-tab:not(.active){background:linear-gradient(120deg,#fff1e6,#ffe0c2);color:#9a3412}
+.dashboard-tab.lodging-tab:not(.active){background:linear-gradient(120deg,#e0f2fe,#dbeafe);color:#1d4ed8}
+.dashboard-welcome{position:relative;overflow:hidden;padding:30px;border-radius:20px;color:#fff;background:linear-gradient(115deg,#182b70 0%,#5141b8 48%,#a23bbd 100%);box-shadow:0 12px 30px #4338ca30}
+.dashboard-welcome:after{content:"✦";position:absolute;right:28px;top:-30px;font-size:170px;color:#ffffff18;transform:rotate(12deg)}
+.welcome-kicker{display:block;font-size:11px;font-weight:900;letter-spacing:2px;opacity:.86}
+.dashboard-welcome h2,.section-banner h2{margin:7px 0;font-size:clamp(23px,3vw,30px);color:inherit}
+.dashboard-welcome p,.section-banner p{margin:0;color:inherit;opacity:.9}
+.dashboard-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px;margin:18px 0}
+.dashboard-card{display:flex;flex-direction:column;align-items:flex-start;gap:10px;min-height:225px;padding:23px;text-align:left;border-radius:18px;box-shadow:0 10px 24px #172b4d12;transition:transform .18s,filter .18s}
+.food-card{background:linear-gradient(140deg,#fff7ed,#ffedd5 55%,#fed7aa);color:#7c2d12;border:1px solid #fdba74}
+.lodging-card{background:linear-gradient(140deg,#eff6ff,#dbeafe 55%,#c7d2fe);color:#1e3a8a;border:1px solid #93c5fd}
+.card-icon{display:grid;place-items:center;width:54px;height:54px;border-radius:16px;background:#ffffffb8;font-size:29px}
+.card-label{font-size:10px;font-weight:900;letter-spacing:1.6px;opacity:.78}
+.dashboard-card strong{font-size:20px;line-height:1.25}
+.card-description{font-size:13px;opacity:.8}
+.card-action{margin-top:auto;font-weight:800;font-size:13px}
+.section-banner{display:flex;align-items:center;gap:18px;margin-bottom:18px;padding:24px;border-radius:18px;color:#fff;box-shadow:0 10px 24px #172b4d1c}
+.food-banner{background:linear-gradient(115deg,#b45309,#ea580c 55%,#f59e0b)}
+.lodging-banner{background:linear-gradient(115deg,#075985,#2563eb 55%,#6366f1)}
+.banner-emoji{font-size:48px;filter:drop-shadow(0 3px 4px #0002)}
+.food-coming{border-top:5px solid #f97316}
+.food-coming h2{color:#9a3412}
+.food-topics{display:flex;flex-wrap:wrap;gap:9px;margin:18px 0}
+.food-topics span{padding:9px 13px;border-radius:30px;background:#fff3e8;border:1px solid #fed7aa;color:#9a3412;font-size:13px;font-weight:700}
+.setup-note{margin:20px 0 0;padding:13px 15px;border-radius:10px;background:#fff8e8;border-left:4px solid #e9a23b;color:#78521b;font-size:13px}
+@media(max-width:640px){.dashboard-cards{grid-template-columns:1fr}.dashboard-welcome{padding:23px}.dashboard-card{min-height:190px}.section-banner{padding:19px}.banner-emoji{font-size:38px}.dashboard-tabs{gap:7px}.dashboard-tab{flex-basis:100%}}
