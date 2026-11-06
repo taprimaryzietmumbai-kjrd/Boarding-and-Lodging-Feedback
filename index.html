@@ -19,6 +19,7 @@
     <button type="button" class="dashboard-tab active" data-view="dashboard">✦ Dashboard</button>
     <button type="button" class="dashboard-tab food-tab" data-view="fooding">🍽️ Feedback for Fooding</button>
     <button type="button" class="dashboard-tab lodging-tab" data-view="lodging">🛏️ Feedback for Lodging</button>
+    <button type="button" class="dashboard-tab admin-tab" data-view="admin">🔐 Admin – Submitted Feedback</button>
   </nav>
   <section id="dashboardView" class="dashboard-view">
     <div class="dashboard-welcome">
@@ -171,6 +172,15 @@
     <div class="submit-row"><button id="submitBtn" type="submit">Submit Feedback</button></div>
     <p class="privacy-note">Please submit only once. Thank you for helping us improve participant facilities.</p>
   </form>
+  </section>
+  <section id="adminView" class="dashboard-view" hidden>
+    <div class="section-banner"><span class="banner-emoji">📊</span><div><span class="welcome-kicker">ADMINISTRATION · AUTHORISED ACCESS</span><h2>Submitted Feedback Register</h2><p>Central register for Fooding and Lodging feedback.</p></div></div>
+    <section class="panel intro">
+      <h2>Google Sheets Register</h2>
+      <p>Sign in to the authorised Google account <strong>taprimaryzietmumbai@gmail.com</strong> to view and manage the register. Access is controlled by the spreadsheet’s sharing permissions.</p>
+      <p><a class="download-link" href="https://docs.google.com/spreadsheets/d/1Kf0JYW0FRFSMU-4nyIib5jVnYTueFCKvSi6Ww5SwfpM/edit" target="_blank" rel="noopener">Open Submitted Feedback Google Sheet ↗</a></p>
+      <p class="privacy-note">Note: the existing Apps Script currently creates PDF records in Google Drive but does not append submissions to this spreadsheet. The Apps Script must be updated and redeployed before new feedback will automatically appear in this register. Existing PDF records are not changed.</p>
+    </section>
   </section>
   <footer>ZIET Mumbai · Teacher Professional Development</footer>
 </main>
