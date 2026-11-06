@@ -243,7 +243,7 @@ loadParticipants();
 
 // Dashboard navigation: switch between the landing dashboard and feedback sections.
 function showDashboardView(view){
-  const ids={dashboard:"dashboardView",fooding:"foodingView",lodging:"lodgingView"};
+  const ids={dashboard:"dashboardView",fooding:"foodingView",lodging:"lodgingView",admin:"adminView"};
   Object.entries(ids).forEach(([key,id])=>{
     const section=document.getElementById(id);
     if(section)section.hidden=key!==view;
